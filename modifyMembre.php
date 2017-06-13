@@ -25,6 +25,19 @@ SQL
     // Pour savoir quel grade sélectionner dans le select
     $selectedAdmin = $infos['grade'] == 'Administrateur' ? 'selected' : '';
     $selectedMembre = $infos['grade'] == 'Membre' ? 'selected' : '';
+
+    // Pour ne pas afficher le bouton 'supprimer' si c'est notre propre compte
+    if ($_GET['id'] != $_SESSION['id']) {
+      $deleteButton = <<<HTML
+                      <a class="btn red darken-3 waves-effect waves-light" id="delMembreButton" onclick="if (confirm('Voulez vous vraiment supprimer ce Membre ?')) window.location.href='script.php?type=delMembre&id={$_GET['id']}';" name="delete">
+                        Supprimer <i class="material-icons right">clear</i>
+     </a>
+HTML
+;
+    } else {
+      $deleteButton = '';
+    }
+
     $p->appendContent(<<<HTML
     <div class="container">
       <h4 class="center"> Modification de Membre </h4>
@@ -62,9 +75,7 @@ SQL
        <input type="hidden" name="type" value="modifyMembre"/>
        <input type="hidden" name="id" value="{$_GET['id']}"/>
        <div class="right btn-auth">
-         <a class="btn red darken-3 waves-effect waves-light" id="delMembreButton" onclick="if (confirm('Voulez vous vraiment supprimer ce Membre ?')) window.location.href='script.php?type=delMembre&id={$_GET['id']}';" name="delete">
-					Supprimer <i class="material-icons right">clear</i>
-				</a>
+         {$deleteButton}
        <button class="btn white black-text waves-effect waves-light" type="submit" name="submit">Modifier
        <i class="material-icons right">send</i>
        </button>

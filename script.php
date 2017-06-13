@@ -90,7 +90,7 @@ SQL
 
         $pdo = myPDO::getInstance();
         $stmt = $pdo->prepare(<<<SQL
-                              SELECT login, nom, prenom, grade
+                              SELECT id, login, nom, prenom, grade
                               FROM personne
                               WHERE login = "{$login}" AND mdp = "{$password}"
 SQL
@@ -98,6 +98,7 @@ SQL
 
         $stmt->execute();
         if (($result = $stmt->fetch()) !== false) {
+          $_SESSION['id'] = $result['id'];
           $_SESSION['login'] = $result['login'];
           $_SESSION['nom'] = $result['nom'];
           $_SESSION['prenom'] = $result['prenom'];
