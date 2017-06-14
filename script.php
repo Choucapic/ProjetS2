@@ -128,16 +128,51 @@ SQL
     $pageName = 'Création de Membre';
     if (isset($_SESSION['login'])) {
       if ($_SESSION['grade'] == 'Administrateur') {
-        if (isset($_POST['login']) && isset($_POST['password']) && isset($_POST['grade']) && isset($_POST['nom']) && isset($_POST['prenom'])) {
-          if ($_POST['login'] != '' && $_POST['password'] != '' && $_POST['grade'] != '' && $_POST['nom'] != '' && $_POST['prenom'] != '') {
+        if (isset($_POST['login']) && isset($_POST['password']) && isset($_POST['grade']) && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['datns']) && isset($_POST['sexe'])) {
+          if ($_POST['login'] != '' && $_POST['password'] != '' && $_POST['grade'] != '' && $_POST['nom'] != '' && $_POST['prenom'] != '' && $_POST['datns'] != '' && $_POST['sexe'] != '') {
             $login = htmlentities(trim($_POST['login']));
             $password = sha1(htmlentities(trim($_POST['password'])));
             $nom = htmlentities(trim($_POST['nom']));
             $prenom =  htmlentities(trim($_POST['prenom']));
 
+            $champs = '';
+            $values = '';
+
+            if (isset($_POST['adr'])) {
+              if ($_POST['adr'] != '') {
+                $adr = htmlentities(trim($_POST['adr']));
+                $champs .= ', `adr`';
+                $values .= ', \''. $adr .'\'';
+              }
+            }
+
+            if (isset($_POST['cp'])) {
+              if ($_POST['cp'] != '') {
+                $cp = htmlentities(trim($_POST['cp']));
+                $champs .= ', `cp`';
+                $values .= ', \''. $cp .'\'';
+              }
+            }
+
+            if (isset($_POST['ville'])) {
+              if ($_POST['ville'] != '') {
+                $ville = htmlentities(trim($_POST['ville']));
+                $champs .= ', `ville`';
+                $values .= ', \''. $ville .'\'';
+              }
+            }
+
+            if (isset($_POST['tel'])) {
+              if ($_POST['tel'] != '') {
+                $tel = htmlentities(trim($_POST['tel']));
+                $champs .= ', `tel`';
+                $values .= ', \''. $tel .'\'';
+              }
+            }
+
             $pdo = myPDO::getInstance();
             $stmt = $pdo->prepare(<<<SQL
-                                  INSERT INTO personne (`login`, `mdp`, `grade`, `nom`, `prenom`) VALUES ('{$login}', '{$password}', '{$_POST['grade']}', '{$nom}', '{$prenom}');
+                                  INSERT INTO personne (`login`, `mdp`, `grade`, `nom`, `prenom`, `datns`, `sexe`{$champs}) VALUES ('{$login}', '{$password}', '{$_POST['grade']}', '{$nom}', '{$prenom}', STR_TO_DATE('{$_POST['datns']}', '%d/%m/%Y'), '{$_POST['sexe']}'{$values});
 SQL
 ) ;
 
@@ -177,23 +212,52 @@ SQL
     $pageName = 'Modification de Membre';
     if (isset($_SESSION['login'])) {
       if ($_SESSION['grade'] == 'Administrateur') {
-        if (isset($_POST['id']) && isset($_POST['login']) && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['grade'])) {
-          if ($_POST['id'] != '' && $_POST['login'] != '' && $_POST['nom'] != '' && $_POST['prenom'] != '' && $_POST['grade'] != '') {
+        if (isset($_POST['id']) && isset($_POST['login']) && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['grade']) && isset($_POST['datns']) && isset($_POST['sexe'])) {
+          if ($_POST['id'] != '' && $_POST['login'] != '' && $_POST['nom'] != '' && $_POST['prenom'] != '' && $_POST['grade'] != '' && $_POST['datns'] != '' && $_POST['sexe'] != '') {
 
             $login = htmlentities(trim($_POST['login']));
             $nom = htmlentities(trim($_POST['nom']));
             $prenom =  htmlentities(trim($_POST['prenom']));
 
-            $setPassword = '';
+            $set = '';
+
             if (isset($_POST['password']) && $_POST['password'] != '') {
               $password = sha1(htmlentities(trim($_POST['password'])));
-              $setPassword = ', mdp = \'' . $password . '\'';
+              $set .= ', mdp = \'' . $password . '\'';
+            }
+
+            if (isset($_POST['adr'])) {
+              if ($_POST['adr'] != '') {
+                $adr = htmlentities(trim($_POST['adr']));
+                $set .= ', adr = \'' . $adr . '\'';
+              }
+            }
+
+            if (isset($_POST['cp'])) {
+              if ($_POST['cp'] != '') {
+                $cp = htmlentities(trim($_POST['cp']));
+                $set .= ', cp = \'' . $cp . '\'';
+              }
+            }
+
+            if (isset($_POST['ville'])) {
+              if ($_POST['ville'] != '') {
+                $ville = htmlentities(trim($_POST['ville']));
+                $set .= ', ville = \'' . $ville . '\'';
+              }
+            }
+
+            if (isset($_POST['tel'])) {
+              if ($_POST['tel'] != '') {
+                $tel = htmlentities(trim($_POST['tel']));
+                $set .= ', tel = \'' . $tel . '\'';
+              }
             }
 
 
             $stmt = myPDO::getInstance()->prepare(<<<SQL
                 UPDATE personne
-                SET login = '{$login}', nom = '{$nom}', prenom = '{$prenom}', grade = '{$_POST['grade']}'{$setPassword}
+                SET login = '{$login}', nom = '{$nom}', prenom = '{$prenom}', grade = '{$_POST['grade']}'{$set}
                 WHERE id = {$_POST['id']}
 SQL
 );
