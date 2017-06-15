@@ -46,7 +46,7 @@ HTML
     <div class="container">
       <h4 class="center"> Modification de Membre </h4>
       <br>
-      <form id="createMembre" method="post" name="modifyMembre" action="script.php" class="col s12">
+      <form id="modifyMembre" method="post" name="modifyMembre" action="script.php" class="col s12">
       <div class="row">
         <div class="input-field" name="grade">
 				 	<select id="insMembreSelectGrade" name="grade">
