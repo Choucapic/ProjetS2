@@ -198,7 +198,7 @@ HTML
     </head>
     <body>
     <nav>
-    <div class="nav-wrapper grey darken-3">
+    <div class="nav-wrapper grey darken-3 navbar-fixed">
       <a href="index.php" class="brand-logo">Shoananas</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-2x fa-bars" aria-hidden="true"></i></a>
       <ul class="right hide-on-med-and-down">

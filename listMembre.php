@@ -27,7 +27,7 @@ $HTML = '<ul class="collapsible" data-collapsible="expandable">';
         <div class="collapsible-body grey memberCollapse">';
       // For Membre en fonction du type
       $stmt = myPDO::getInstance()->prepare(<<<SQL
-              SELECT id, nom, prenom
+              SELECT id, nom, prenom, login
               FROM personne
               WHERE grade = '{$grade}'
 SQL
@@ -38,7 +38,7 @@ SQL
         $membres[] = $object ;
       }
       foreach ($membres as $membre) {
-      $HTML .= '<div class="row member"><div class="col m6 s6"> <p style="padding-top: 15px;"> Nom : '.  $membre['nom'] . ' ' . $membre['prenom'] . '</p> </div> <div class="col m6 s6"><a class="black waves-effect waves-light btn right" href="modifyMembre.php?id='. $membre['id'] .'" style="margin-right: 10px; margin-top: 18px;"><i class="material-icons left">mode_edit</i>Modifier</a></div></div><hr>';
+      $HTML .= '<div class="row member"><div class="col m6 s6"> <p style="padding-top: 15px;"> Nom : '.  $membre['nom'] . ' ' . $membre['prenom'] .  '<br> Login : '. $membre['login'] .'</p> </div> <div class="col m6 s6"><a class="black waves-effect waves-light btn right" href="modifyMembre.php?id='. $membre['id'] .'" style="margin-right: 10px; margin-top: 35px;"><i class="material-icons left">mode_edit</i>Modifier</a></div></div><hr>';
       }
     $HTML .= "</div> </li>";
     }
