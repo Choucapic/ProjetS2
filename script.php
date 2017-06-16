@@ -292,6 +292,84 @@ SQL
       $url = 'index';
     }
     break;
+  /* -------------------- Ajout d'un item -------------------- */
+  case 'ajout' :
+    $pageName = "Ajout d'un item dans le catalogue";
+    if (isset($_SESSION['login'])) {
+    if (isset($_POST['table']) && $_POST['table'] != '') {
+      switch ($_POST['table']) {
+        case 'materiel' :
+          if (isset($_POST['ref']) && isset($_POST['prix']) && isset($_POST['marque']) && isset($_POST['typeM']) && isset($_POST['carac']) && isset($_POST['valeurCarac'])) {
+            if ($_POST['ref'] != '' && $_POST['prix'] != '' && $_POST['marque'] != '' && $_POST['typeM'] != '') {
+              $pdo = myPDO::getInstance();
+              $stmt = $pdo->prepare(<<<SQL
+                                    INSERT INTO `materiel` VALUES ('{$_POST['ref']}', {$_POST['prix']}, '{$_POST['marque']}', '{$_POST['typeM']}', {$_SESSION['id']});
+SQL
+) ;
+              $stmt->execute();
+              for ($i = 0; $i < count($_POST['carac']); $i++) {
+                if ($_POST['valeurCarac'][$i] != '') {
+                  $pdo = myPDO::getInstance();
+                  $stmt = $pdo->prepare(<<<SQL
+                                        INSERT INTO `valeurcaracteristique` VALUES ('{$_POST['carac'][$i]}', '{$_POST['ref']}', '{$_POST['valeurCarac'][$i]}');
+SQL
+) ;
+                  $stmt->execute();
+                }
+              }
+
+              $error = false;
+              $message = 'Le matériel "' . $_POST['ref'] . '" a bien été ajouté dans le catalogue';
+              $time = 5;
+              $url = 'ajout';
+            } else {
+              $error = true;
+              $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
+              $time = 5;
+              $url = 'ajout';
+            }
+          } else {
+            $error = true;
+            $message = 'Certains paramètres sont vides, vous allez être redirigé automatiquement';
+            $time = 5;
+            $url = 'ajout';
+          }
+          break;
+        case 'type' :
+        case 'marque' :
+        case 'caracteristique' :
+        if (isset($_POST['nom']) && $_POST['nom'] != '') {
+          $pdo = myPDO::getInstance();
+          $stmt = $pdo->prepare(<<<SQL
+                                INSERT INTO `{$_POST['table']}` (`nom`) VALUES ('{$_POST['nom']}');
+SQL
+) ;
+          $stmt->execute();
+          $error = false;
+          $message = 'L\'item "' . $_POST['table'] . '" a bien été ajouté dans le catalogue';
+          $time = 5;
+          $url = 'ajout';
+        } else {
+          $error = true;
+          $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
+          $time = 5;
+          $url = 'ajout';
+        }
+          break;
+      }
+    } else {
+      $error = true;
+      $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
+      $time = 5;
+      $url = 'ajout';
+    }
+  } else {
+    $error = true;
+    $message = 'Vous n\'êtes pas connecté, vous allez être redirigé automatiquement';
+    $time = 5;
+    $url = 'index';
+  }
+    break;
   default :
     $pageName = "Erreur POST";
     $error = true;

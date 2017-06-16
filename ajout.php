@@ -114,7 +114,7 @@ SQL
               </div>
               <div class="input-field col s6">
                 <input id="ajoutCaracInput1" type="text" class="validate" name="valeurCarac[]">
-                <label for="ValeurCarac[]">Valeur</label>
+                <label for="valeurCarac[]">Valeur</label>
               </div>
             </div>
           </div>
