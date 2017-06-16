@@ -47,7 +47,7 @@ $( document ).ready(function() {
    });
 
    $('#buttonAddCarac').on('click', function() {
-    // var selected = $("#ajoutCaracSelect"+ increment-1 +" option:selected").html();
+    var selected = $('#ajoutCaracSelect'+(increment-1)).val();
      var htmlNewCarac = '<div class="row">';
 htmlNewCarac +='<div id="ajoutCaracDiv" class="input-field col s6" name="carac[]">';
 htmlNewCarac +='<select id="ajoutCaracSelect' + increment + '" name="carac[]">';
@@ -56,14 +56,14 @@ htmlNewCarac +='</select>';
 htmlNewCarac +='<label for="ajoutCaracSelect">Caractéristique</label>';
 htmlNewCarac +='</div>';
 htmlNewCarac +='<div class="input-field col s6">';
-htmlNewCarac +='<input type="text" class="validate" name="valeurCarac[]">';
+htmlNewCarac +='<input id="'+increment+'" type="text" class="validate" name="valeurCarac[]">';
 htmlNewCarac +='<label for="ValeurCarac[]">Valeur</label>';
 htmlNewCarac +='</div>';
 htmlNewCarac +='</div>';
     var id = '#ajoutCaracSelect'+ increment;
-     increment++;
      $("#champsCarac").append(htmlNewCarac);
-     // $("#ajoutCaracSelect"+increment+" option[value='" + selected +"']").prop("disabled", true);
+     $("#ajoutCaracSelect"+increment+" option[value='" + selected +"']").attr('disabled','true');
      $('select').material_select();
+     increment++;
    });
 });

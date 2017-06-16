@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Client :  mysql
--- Généré le :  Jeu 15 Juin 2017 à 16:09
+-- Généré le :  Ven 16 Juin 2017 à 13:11
 -- Version du serveur :  5.5.50-MariaDB
 -- Version de PHP :  5.4.16
 
@@ -68,7 +68,8 @@ CREATE TABLE IF NOT EXISTS `materiel` (
   `ref` varchar(20) NOT NULL,
   `prix` int(11) NOT NULL,
   `idM` smallint(6) NOT NULL,
-  `idT` smallint(6) NOT NULL
+  `idT` smallint(6) NOT NULL,
+  `idPersonne` smallint(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -153,7 +154,8 @@ ALTER TABLE `marque`
 ALTER TABLE `materiel`
   ADD PRIMARY KEY (`ref`),
   ADD KEY `idM` (`idM`),
-  ADD KEY `idT` (`idT`);
+  ADD KEY `idT` (`idT`),
+  ADD KEY `idPersonne` (`idPersonne`);
 
 --
 -- Index pour la table `personne`
@@ -205,6 +207,7 @@ ALTER TABLE `type`
 -- Contraintes pour la table `materiel`
 --
 ALTER TABLE `materiel`
+  ADD CONSTRAINT `materiel_ibfk_3` FOREIGN KEY (`idPersonne`) REFERENCES `personne` (`id`),
   ADD CONSTRAINT `materiel_ibfk_1` FOREIGN KEY (`idM`) REFERENCES `marque` (`id`),
   ADD CONSTRAINT `materiel_ibfk_2` FOREIGN KEY (`idT`) REFERENCES `type` (`id`);
 

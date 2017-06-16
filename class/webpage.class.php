@@ -150,7 +150,7 @@ HTML
         if ($isConnected) {
             $nav = '<li><a class="red-text" href="script.php?type=disconnection">Déconnexion</a></li>
                     <li><a href="#">Catalogue</a></li>
-                    <li><a href="#">Ajout</a></li>';
+                    <li><a href="ajout.php">Ajout</a></li>';
             $navMobile = $nav;
 
                     if ($_SESSION['grade'] == 'Administrateur') {
@@ -199,7 +199,7 @@ HTML
     <body>
     <nav>
     <div class="nav-wrapper grey darken-3">
-      <a href="index.php" class="brand-logo">Shoananas</a>
+      <a href="index.php" class="brand-logo">IUT'Elec</a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-2x fa-bars" aria-hidden="true"></i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="index.php">Accueil</a></li>

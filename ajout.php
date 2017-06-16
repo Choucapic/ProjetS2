@@ -113,7 +113,7 @@ SQL
                 <label for="ajoutCaracSelect">Caractéristique</label>
               </div>
               <div class="input-field col s6">
-                <input type="text" class="validate" name="valeurCarac[]">
+                <input id="ajoutCaracInput1" type="text" class="validate" name="valeurCarac[]">
                 <label for="ValeurCarac[]">Valeur</label>
               </div>
             </div>
