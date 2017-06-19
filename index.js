@@ -6,13 +6,18 @@ $( document ).ready(function() {
     $('.carousel').carousel();
     $(".dropdown-button").dropdown();
     $('select').material_select();
-    $('.datepicker').pickadate({
+    $('#datns').pickadate({
     selectMonths: true,
     selectYears: 50,
     max: new Date(),
-    format: 'dd/mm/yyyy',
-    formatSubmit: 'dd/mm/yyyy'
+    format: 'yyyy-mm-dd',
+    formatSubmit: 'yyyy-mm-dd'
   });
+  $('#datDepart').pickadate({
+  selectMonths: true,
+  format: 'yyyy-mm-dd',
+  formatSubmit: 'yyyy-mm-dd'
+});
    $("input:radio[name='table']").on('change', function() {
       switch($("input:radio[name='table']:checked").val()) {
         case 'type' :
@@ -66,4 +71,24 @@ htmlNewCarac +='</div>';
      $('select').material_select();
      increment++;
    });
+
+      $(".radioCatalogue").on('change', function() {
+        switch($(".radioCatalogue:checked").val()) {
+          case 'typeM' :
+            $("#typeMat").prop("hidden", false);
+            $("#marqueMat").prop("hidden", true);
+            $("#lettreMat").prop("hidden", true);
+            break;
+          case 'marque' :
+            $("#typeMat").prop("hidden", true);
+            $("#marqueMat").prop("hidden", false);
+            $("#lettreMat").prop("hidden", true);
+            break;
+          case 'alpha' :
+            $("#typeMat").prop("hidden", true);
+            $("#marqueMat").prop("hidden", true);
+            $("#lettreMat").prop("hidden", false);
+            break;
+          }
+         });
 });

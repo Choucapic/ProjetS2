@@ -149,7 +149,6 @@ HTML
         $navMobile = '';
         if ($isConnected) {
             $nav = '<li><a class="red-text" href="script.php?type=disconnection">Déconnexion</a></li>
-                    <li><a href="#">Catalogue</a></li>
                     <li><a href="ajout.php">Ajout</a></li>';
             $navMobile = $nav;
 
@@ -203,10 +202,12 @@ HTML
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="fa fa-2x fa-bars" aria-hidden="true"></i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="index.php">Accueil</a></li>
+        <li><a href="catalogue.php">Catalogue</a></li>
         {$nav}
       </ul>
       <ul class="side-nav" id="mobile-demo">
         <li><a href="index.php">Accueil</a></li>
+        <li><a href="catalogue.php">Catalogue</a></li>
         {$navMobile}
       </ul>
     </div>

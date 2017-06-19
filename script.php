@@ -28,11 +28,11 @@ if (isset($_GET['type'])) {
     $pageName = 'Supression de Membre';
     if (isset($_SESSION['login'])) {
       if ($_SESSION['grade'] == 'Administrateur') {
-        if (isset($_GET['id'])) {
-          if ($_GET['id'] != '') {
+        if (isset($_GET['idP'])) {
+          if ($_GET['idP'] != '') {
             $stmt = myPDO::getInstance()->prepare(<<<SQL
                    DELETE FROM `personne`
-                   WHERE id = {$_GET['id']}
+                   WHERE idP = {$_GET['idP']}
 SQL
                ) ;
             $stmt->execute();
@@ -90,7 +90,7 @@ SQL
 
         $pdo = myPDO::getInstance();
         $stmt = $pdo->prepare(<<<SQL
-                              SELECT id, login, nom, prenom, grade
+                              SELECT idP, login, nomP, prenom, grade, datDepart
                               FROM personne
                               WHERE login = "{$login}" AND mdp = "{$password}"
 SQL
@@ -98,9 +98,10 @@ SQL
 
         $stmt->execute();
         if (($result = $stmt->fetch()) !== false) {
-          $_SESSION['id'] = $result['id'];
+          if ($result['datDepart'] == null) {
+          $_SESSION['idP'] = $result['idP'];
           $_SESSION['login'] = $result['login'];
-          $_SESSION['nom'] = $result['nom'];
+          $_SESSION['nomP'] = $result['nomP'];
           $_SESSION['prenom'] = $result['prenom'];
           $_SESSION['grade'] = $result['grade'];
 
@@ -108,6 +109,12 @@ SQL
           $error = false;
           $message='Vous êtes bien connecté, vous allez être redirigé vers l\'accueil';
           $time=3;
+        } else {
+          $url="index";
+          $error = true;
+          $message = 'Votre compte a été clôturé, vous ne pouvez pas vous connecter';
+          $time=5;
+        }
         } else {
           $url="index";
           $error = true;
@@ -128,11 +135,11 @@ SQL
     $pageName = 'Création de Membre';
     if (isset($_SESSION['login'])) {
       if ($_SESSION['grade'] == 'Administrateur') {
-        if (isset($_POST['login']) && isset($_POST['password']) && isset($_POST['grade']) && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['datns']) && isset($_POST['sexe'])) {
-          if ($_POST['login'] != '' && $_POST['password'] != '' && $_POST['grade'] != '' && $_POST['nom'] != '' && $_POST['prenom'] != '' && $_POST['datns'] != '' && $_POST['sexe'] != '') {
+        if (isset($_POST['login']) && isset($_POST['password']) && isset($_POST['grade']) && isset($_POST['nomP']) && isset($_POST['prenom']) && isset($_POST['datns']) && isset($_POST['sexe'])) {
+          if ($_POST['login'] != '' && $_POST['password'] != '' && $_POST['grade'] != '' && $_POST['nomP'] != '' && $_POST['prenom'] != '' && $_POST['datns'] != '' && $_POST['sexe'] != '') {
             $login = htmlentities(trim($_POST['login']));
             $password = sha1(htmlentities(trim($_POST['password'])));
-            $nom = htmlentities(trim($_POST['nom']));
+            $nom = htmlentities(trim($_POST['nomP']));
             $prenom =  htmlentities(trim($_POST['prenom']));
 
             $champs = '';
@@ -170,9 +177,11 @@ SQL
               }
             }
 
+            $now = date("d/m/y");
+
             $pdo = myPDO::getInstance();
             $stmt = $pdo->prepare(<<<SQL
-                                  INSERT INTO personne (`login`, `mdp`, `grade`, `nom`, `prenom`, `datns`, `sexe`{$champs}) VALUES ('{$login}', '{$password}', '{$_POST['grade']}', '{$nom}', '{$prenom}', STR_TO_DATE('{$_POST['datns']}', '%d/%m/%Y'), '{$_POST['sexe']}'{$values});
+                                  INSERT INTO personne (`login`, `mdp`, `grade`, `nomP`, `prenom`, `datns`, `sexe`, `datAjout`{$champs}) VALUES ('{$login}', '{$password}', '{$_POST['grade']}', '{$nom}', '{$prenom}', STR_TO_DATE('{$_POST['datns']}', '%Y-%m-%d'), '{$_POST['sexe']}', STR_TO_DATE('{$now}', '%d/%m/%Y'){$values});
 SQL
 ) ;
 
@@ -212,11 +221,11 @@ SQL
     $pageName = 'Modification de Membre';
     if (isset($_SESSION['login'])) {
       if ($_SESSION['grade'] == 'Administrateur') {
-        if (isset($_POST['id']) && isset($_POST['login']) && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['grade']) && isset($_POST['datns']) && isset($_POST['sexe'])) {
-          if ($_POST['id'] != '' && $_POST['login'] != '' && $_POST['nom'] != '' && $_POST['prenom'] != '' && $_POST['grade'] != '' && $_POST['datns'] != '' && $_POST['sexe'] != '') {
+        if (isset($_POST['idP']) && isset($_POST['login']) && isset($_POST['nomP']) && isset($_POST['prenom']) && isset($_POST['grade']) && isset($_POST['datns']) && isset($_POST['sexe'])) {
+          if ($_POST['idP'] != '' && $_POST['login'] != '' && $_POST['nomP'] != '' && $_POST['prenom'] != '' && $_POST['grade'] != '' && $_POST['datns'] != '' && $_POST['sexe'] != '') {
 
             $login = htmlentities(trim($_POST['login']));
-            $nom = htmlentities(trim($_POST['nom']));
+            $nom = htmlentities(trim($_POST['nomP']));
             $prenom =  htmlentities(trim($_POST['prenom']));
 
             $set = '';
@@ -254,11 +263,17 @@ SQL
               }
             }
 
+            if (isset($_POST['datDepart'])) {
+              if ($_POST['datDepart'] != '') {
+                $set .= ", datDepart = STR_TO_DATE('" . $_POST['datDepart'] ."', '%Y-%m-%d')";
+              }
+            }
+
 
             $stmt = myPDO::getInstance()->prepare(<<<SQL
                 UPDATE personne
-                SET login = '{$login}', nom = '{$nom}', prenom = '{$prenom}', grade = '{$_POST['grade']}'{$set}
-                WHERE id = {$_POST['id']}
+                SET login = '{$login}', nomP = '{$nom}', prenom = '{$prenom}', grade = '{$_POST['grade']}', datns = STR_TO_DATE('{$_POST['datns']}', '%Y-%m-%d'){$set}
+                WHERE idP = {$_POST['idP']}
 SQL
 );
           $stmt->execute();
@@ -303,7 +318,7 @@ SQL
             if ($_POST['ref'] != '' && $_POST['prix'] != '' && $_POST['marque'] != '' && $_POST['typeM'] != '') {
               $pdo = myPDO::getInstance();
               $stmt = $pdo->prepare(<<<SQL
-                                    INSERT INTO `materiel` VALUES ('{$_POST['ref']}', {$_POST['prix']}, '{$_POST['marque']}', '{$_POST['typeM']}', {$_SESSION['id']});
+                                    INSERT INTO `materiel` VALUES ('{$_POST['ref']}', {$_POST['prix']}, '{$_POST['marque']}', '{$_POST['typeM']}', {$_SESSION['idP']});
 SQL
 ) ;
               $stmt->execute();

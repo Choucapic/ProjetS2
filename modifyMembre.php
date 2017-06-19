@@ -9,18 +9,26 @@ $p = new WebPage('Modification de Membre');
 
 if (isset($_SESSION['login'])) {
   if ($_SESSION['grade'] == 'Administrateur') {
-    if (isset($_GET['id'])) {
+    if (isset($_GET['idP'])) {
 
   // Pour Trouver le membre
   $stmt = myPDO::getInstance()->prepare(<<<SQL
           SELECT *
           FROM personne
-          WHERE id = {$_GET['id']}
+          WHERE idP = {$_GET['idP']}
 SQL
 );
   $stmt->execute(array());
   if (($object = $stmt->fetch()) !== false) {
     $infos = $object ;
+
+    // Pour mettre un bon format pour la date d'ajout
+    setlocale(LC_ALL, 'fra', 'fr_FR.UTF-8');
+    $dateAjout = strftime("%d %B %Y", strtotime($infos['datAjout']));
+
+    // Pour avoir le bon format de la date de naissance de la base de données
+  //  $datns = date("d/m/Y", strtotime($infos['datns']));
+  //  var_dump($datns);
 
     // Pour savoir quel grade sélectionner dans le select
     $selectedAdmin = $infos['grade'] == 'Administrateur' ? 'selected' : '';
@@ -31,15 +39,26 @@ SQL
     $selectedFemme = $infos['sexe'] == 'Femme' ? 'selected' : '';
 
     // Pour ne pas afficher le bouton 'supprimer' si c'est notre propre compte
-    if ($_GET['id'] != $_SESSION['id']) {
+    if ($_GET['idP'] != $_SESSION['idP']) {
       $deleteButton = <<<HTML
-                      <a class="btn red darken-3 waves-effect waves-light" id="delMembreButton" onclick="if (confirm('Voulez vous vraiment supprimer ce Membre ?')) window.location.href='script.php?type=delMembre&id={$_GET['id']}';" name="delete">
+                      <a class="btn red darken-3 waves-effect waves-light" id="delMembreButton" onclick="if (confirm('Voulez vous vraiment supprimer ce Membre ?')) window.location.href='script.php?type=delMembre&idP={$_GET['idP']}';" name="delete">
                         Supprimer <i class="material-icons right">clear</i>
      </a>
 HTML
 ;
+      $dateDepartPicker = <<<HTML
+      <br>
+      <p class="center">Si l'utilisateur est désormais parti et que vous souhaitez clôturer son compte, veuillez spécifier une date de départ :</p>
+      <div class="col m4 s0"></div>
+      <div class="input-field col s4">
+          <input id="datDepart" type="date" class="datepicker" name="datDepart" value="{$infos['datDepart']}">
+          <label for="datDepart">Date de Départ</label>
+        </div>
+        <div class="col m4 s0"></div>
+HTML;
     } else {
       $deleteButton = '';
+      $dateDepartPicker = '';
     }
 
     $p->appendContent(<<<HTML
@@ -67,8 +86,8 @@ HTML
           </div>
 
           <div class="input-field col m6 s12">
-            <input id="nom" type="text" class="validate" name="nom" value="{$infos['nom']}" required>
-            <label for="nom">Nom</label>
+            <input id="nomP" type="text" class="validate" name="nomP" value="{$infos['nomP']}" required>
+            <label for="nomP">Nom</label>
             </div>
 
             <div class="input-field col m6 s12">
@@ -108,9 +127,12 @@ HTML
                   <input id="tel" type="tel" maxlength="10" pattern="[0-9]{10}" class="validate" name="tel" value="{$infos['tel']}">
                   <label for="tel">Téléphone</label>
                   </div>
+
+                  <p class="center">Date d'ajout de cet utilisateur : {$dateAjout} </p>
+                  {$dateDepartPicker}
        </div>
        <input type="hidden" name="type" value="modifyMembre"/>
-       <input type="hidden" name="id" value="{$_GET['id']}"/>
+       <input type="hidden" name="idP" value="{$_GET['idP']}"/>
        <div class="right btn-auth">
          {$deleteButton}
        <button class="btn white black-text waves-effect waves-light" type="submit" name="submit">Modifier

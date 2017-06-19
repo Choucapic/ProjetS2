@@ -11,7 +11,7 @@ if (isset($_SESSION['login'])) {
 
   // Pour les marques
   $stmt = myPDO::getInstance()->prepare(<<<SQL
-          SELECT id, nom
+          SELECT idM, nomM
           FROM marque
 SQL
 );
@@ -19,12 +19,12 @@ SQL
       $marques = $stmt->fetchAll();
   $marquesHTML = "";
   foreach ($marques as $marque) {
-  $marquesHTML .= "<option value=\"". $marque['id'] ."\">". $marque['nom'] ."</option>";
+  $marquesHTML .= "<option value=\"". $marque['idM'] ."\">". $marque['nomM'] ."</option>";
   }
 
   // Pour les Types de matériel
   $stmt = myPDO::getInstance()->prepare(<<<SQL
-          SELECT id, nom
+          SELECT idT, nomT
           FROM type
 SQL
 );
@@ -32,12 +32,12 @@ SQL
       $types = $stmt->fetchAll();
   $typesHTML = "";
   foreach ($types as $type) {
-  $typesHTML .= "<option value=\"". $type['id'] ."\">". $type['nom'] ."</option>";
+  $typesHTML .= "<option value=\"". $type['idT'] ."\">". $type['nomT'] ."</option>";
   }
 
   // Pour les Caractéristiques
   $stmt = myPDO::getInstance()->prepare(<<<SQL
-          SELECT id, nom
+          SELECT idC, nomC
           FROM caracteristique
 SQL
 );
@@ -45,7 +45,7 @@ SQL
       $caracs = $stmt->fetchAll();
   $caracsHTML = "";
   foreach ($caracs as $carac) {
-  $caracsHTML .= "<option value=\"". $carac['id'] ."\">". $carac['nom'] ."</option>";
+  $caracsHTML .= "<option value=\"". $carac['idC'] ."\">". $carac['nomC'] ."</option>";
   }
 
 

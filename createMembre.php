@@ -35,8 +35,8 @@ if (isset($_SESSION['login'])) {
           </div>
 
           <div class="input-field col m6 s12">
-            <input id="nom" type="text" class="validate" name="nom" required>
-            <label for="nom">Nom</label>
+            <input id="nomP" type="text" class="validate" name="nomP" required>
+            <label for="nomP">Nom</label>
             </div>
 
             <div class="input-field col m6 s12">

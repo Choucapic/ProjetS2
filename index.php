@@ -8,7 +8,7 @@ $p = new WebPage('Accueil');
 
 if (isset($_SESSION['login'])) {
   $accueil = <<<HTML
-  <h1 class="center">Bienvenue {$_SESSION['nom']} {$_SESSION['prenom']}</h1>
+  <h1 class="center">Bienvenue {$_SESSION['nomP']} {$_SESSION['prenom']}</h1>
   <p class="center"> Veuillez sélectionner la rubrique que vous souhaitez accéder à partir du menu </p>
 HTML
 ;
