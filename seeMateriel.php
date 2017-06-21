@@ -32,7 +32,7 @@ $stmt->execute(array());
 $caracHTML = '';
 while (($object = $stmt->fetch()) !== false) {
   $caracHTML .= '<div class="col xl3 m6 s12">
-    <h5 class="center"><u>'. $object['nomC'] .' :</u> '. $object['valeur'] .' </h5>
+    <h5 class="center"><u>'. $object['nomC'] .' :</u> '. $object['valeur'] . (($object['nomC'] == 'Poids') ? 'g' : '') .' </h5>
   </div>';
 }
       $p->setTitle('Matériel ' . $infos['ref']);

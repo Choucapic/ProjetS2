@@ -5,6 +5,10 @@ session_start();
 include_once 'class/webpage.class.php';
 include_once 'class/mypdo.include.php';
 
+// Spécifier le temps de redirection en seconde : (Pour lire le message)
+$redirectGood = 3;
+$redirectError = 5;
+
 if (isset($_GET['type'])) {
   switch ($_GET['type']) {
     /* -------------------- Deconnexion -------------------- */
@@ -20,7 +24,7 @@ if (isset($_GET['type'])) {
         $error = true;
         $message = 'Vous n\'êtes pas connecté, vous allez être redirigé vers l\'accueil';
       }
-      $time = 3;
+      $time = $redirectGood;
       $url = 'index';
       break;
     /* -------------------- Supression de Membre -------------------- */
@@ -38,30 +42,74 @@ SQL
             $stmt->execute();
             $error = false;
             $message = 'Le membre a bien été supprimé, vous allez être redirigé automatiquement';
-            $time = 5;
+            $time = $redirectGood;
             $url = 'listMembre';
           } else {
             $error = true;
             $message = 'Certains paramètres sont vides, vous allez être redirigé automatiquement';
-            $time = 5;
+            $time = $redirectError;
             $url = 'listMembre';
           }
         } else {
           $error = true;
           $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
-          $time = 5;
+          $time = $redirectError;
           $url = 'listMembre';
         }
       } else {
         $error = true;
         $message = 'Vous n\'avez pas les droits requis, vous allez être redirigé vers l\'accueil';
-        $time = 5;
+        $time = $redirectError;
         $url = 'index';
       }
     } else {
       $error = true;
       $message = 'Vous n\'êtes pas connecté, vous allez être redirigé vers l\'accueil';
-      $time = 5;
+      $time = $redirectError;
+      $url = 'index';
+    }
+      break;
+    /* -------------------- Supression de Matériel -------------------- */
+    case 'delMateriel' :
+    $pageName = 'Supression de Matériel';
+    if (isset($_SESSION['login'])) {
+      if (isset($_GET['ref'])) {
+        if ($_GET['ref'] != '') {
+          $stmt = myPDO::getInstance()->prepare(<<<SQL
+                 DELETE FROM `materiel`
+                 WHERE ref = '{$_GET['ref']}'
+SQL
+             ) ;
+          $stmt->execute();
+
+          // Ne pas oublier de rincer les caractéristiques correspondantes
+          $stmt = myPDO::getInstance()->prepare(<<<SQL
+                                DELETE FROM `valeurcaracteristique`
+                                WHERE ref = '{$_GET['ref']}'
+SQL
+) ;
+          $stmt->execute();
+          
+          $error = false;
+          $message = 'Le matériel a bien été supprimé, vous allez être redirigé automatiquement';
+          $time = $redirectGood;
+          $url = 'catalogue';
+        } else {
+          $error = true;
+          $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
+          $time = $redirectError;
+          $url = 'catalogue';
+        }
+      } else {
+        $error = true;
+        $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
+        $time = $redirectError;
+        $url = 'catalogue';
+      }
+    } else {
+      $error = true;
+      $message = 'Vous n\'êtes pas connecté, vous allez être redirigé vers l\'accueil';
+      $time = $redirectError;
       $url = 'index';
     }
       break;
@@ -69,7 +117,7 @@ SQL
       $pageName = "Erreur GET";
       $error = true;
       $message = 'Un problème inconnu est survenu, vous allez être redirigé vers l\'accueil';
-      $time = 5;
+      $time = $redirectError;
       $url = 'index';
   }
 } else if (isset($_POST['type'])) {
@@ -81,7 +129,7 @@ SQL
       $url="index";
       $error = true;
       $message="Vous êtes déjà connecté";
-      $time=3;
+      $time=$redirectGood;
     } else if (isset($_POST['submit'])) {
       $login  = (isset($_POST['login'])) ? htmlentities(trim($_POST['login'])) : '';
       $password   = (isset($_POST['password'])) ? sha1(htmlentities(trim($_POST['password'])))   : '';
@@ -108,25 +156,25 @@ SQL
           $url="index";
           $error = false;
           $message='Vous êtes bien connecté, vous allez être redirigé vers l\'accueil';
-          $time=3;
+          $time=$redirectGood;
         } else {
           $url="index";
           $error = true;
           $message = 'Votre compte a été clôturé, vous ne pouvez pas vous connecter';
-          $time=5;
+          $time=$redirectError;
         }
         } else {
           $url="index";
           $error = true;
           $message = 'Login ou de mot de passe incorrect <br> Vous allez être redirigé automatiquement';
-          $time=5;
+          $time=$redirectError;
         }
 
       } else {
         $error = true;
         $url="index";
         $message = 'Login ou mot de passe vide <br> Vous allez être redirigé automatiquement';
-        $time=5;
+        $time=$redirectError;
       }
     }
     break;
@@ -188,31 +236,31 @@ SQL
             $stmt->execute();
             $error = false;
             $message = 'Le membre ' . $nom . ' ' . $prenom . ' a bien été créé, vous allez être redirigé vers l\'accueil' ;
-            $time = 3;
+            $time = $redirectGood;
             $url = 'index';
 
           } else {
             $error = true;
             $message = 'Certains paramètres sont vides, vous allez être redirigé automatiquement';
-            $time = 5;
+            $time = $redirectError;
             $url = 'createMembre';
           }
         } else {
           $error = true;
           $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
-          $time = 5;
+          $time = $redirectError;
           $url = 'createMembre';
         }
       } else {
         $error = true;
         $message = 'Vous n\'avez pas les droits requis, vous allez être redirigé vers l\'accueil';
-        $time = 5;
+        $time = $redirectError;
         $url = 'index';
       }
     } else {
       $error = true;
       $message = 'Vous n\'êtes pas connecté, vous allez être redirigé vers l\'accueil';
-      $time = 5;
+      $time = $redirectError;
       $url = 'index';
     }
     break;
@@ -280,30 +328,30 @@ SQL
           $error = false;
           $url="index";
           $message = 'Le Membre a bien été modifié, <br> Vous allez être redirigé vers l\'accueil';
-          $time=3;
+          $time=$redirectGood;
 
           } else {
             $error = true;
             $message = 'Certains paramètres sont vides, vous allez être redirigé automatiquement';
-            $time = 5;
+            $time = $redirectError;
             $url = 'listMembre';
           }
         } else {
           $error = true;
           $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
-          $time = 5;
+          $time = $redirectError;
           $url = 'listMembre';
         }
       } else {
         $error = true;
         $message = 'Vous n\'avez pas les droits requis, vous allez être redirigé vers l\'accueil';
-        $time = 5;
+        $time = $redirectError;
         $url = 'index';
       }
     } else {
       $error = true;
       $message = 'Vous n\'êtes pas conencté, vous allez être redirigé vers l\'accueil';
-      $time = 5;
+      $time = $redirectError;
       $url = 'index';
     }
     break;
@@ -335,18 +383,18 @@ SQL
 
               $error = false;
               $message = 'Le matériel "' . $_POST['ref'] . '" a bien été ajouté dans le catalogue';
-              $time = 5;
+              $time = $redirectGood;
               $url = 'ajout';
             } else {
               $error = true;
               $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
-              $time = 5;
+              $time = $redirectError;
               $url = 'ajout';
             }
           } else {
             $error = true;
             $message = 'Certains paramètres sont vides, vous allez être redirigé automatiquement';
-            $time = 5;
+            $time = $redirectError;
             $url = 'ajout';
           }
           break;
@@ -362,12 +410,12 @@ SQL
           $stmt->execute();
           $error = false;
           $message = 'L\'item "' . $_POST['table'] . '" a bien été ajouté dans le catalogue';
-          $time = 5;
+          $time = $redirectGood;
           $url = 'ajout';
         } else {
           $error = true;
           $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
-          $time = 5;
+          $time = $redirectError;
           $url = 'ajout';
         }
           break;
@@ -375,28 +423,85 @@ SQL
     } else {
       $error = true;
       $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
-      $time = 5;
+      $time = $redirectError;
       $url = 'ajout';
     }
   } else {
     $error = true;
     $message = 'Vous n\'êtes pas connecté, vous allez être redirigé automatiquement';
-    $time = 5;
+    $time = $redirectError;
     $url = 'index';
   }
+    break;
+  /* -------------------- Modification de Matériel -------------------- */
+  case 'modifyMateriel' :
+    $pageName = 'Modification de matériel';
+    if (isset($_SESSION['login'])) {
+      if (isset($_POST['oldRef']) && isset($_POST['ref']) && isset($_POST['prix']) && isset($_POST['marque']) && isset($_POST['typeM']) && isset($_POST['carac']) && isset($_POST['valeurCarac'])) {
+        if ($_POST['oldRef'] != '' && $_POST['ref'] != '' && $_POST['prix'] != '' && $_POST['marque'] != '' && $_POST['typeM'] != '') {
+          $pdo = myPDO::getInstance();
+          $stmt = $pdo->prepare(<<<SQL
+                                UPDATE `materiel`
+                                SET ref = '{$_POST['ref']}', prix = {$_POST['prix']}, idM = '{$_POST['marque']}', idT = '{$_POST['typeM']}'
+                                WHERE ref = '{$_POST['oldRef']}';
+SQL
+) ;
+          $stmt->execute();
+
+          // On rince les anciennes caractéristiques
+          $stmt = $pdo->prepare(<<<SQL
+                                DELETE FROM `valeurcaracteristique`
+                                WHERE ref = '{$_POST['oldRef']}';
+SQL
+) ;
+          // On ajoute les nouvelles (ou les même si elles n'ont pas changé)
+          $stmt->execute();
+          for ($i = 0; $i < count($_POST['carac']); $i++) {
+            if ($_POST['valeurCarac'][$i] != '') {
+              $pdo = myPDO::getInstance();
+              $stmt = $pdo->prepare(<<<SQL
+                                    INSERT INTO `valeurcaracteristique` VALUES ('{$_POST['carac'][$i]}', '{$_POST['ref']}', '{$_POST['valeurCarac'][$i]}');
+SQL
+) ;
+              $stmt->execute();
+            }
+          }
+
+          $error = false;
+          $message = 'Le matériel "' . $_POST['ref'] . '" a bien été modifié dans le catalogue';
+          $time = $redirectGood;
+          $url = 'catalogue';
+        } else {
+          $error = true;
+          $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
+          $time = $redirectError;
+          $url = 'catalogue';
+        }
+      } else {
+        $error = true;
+        $message = 'Certains paramètres sont vides, vous allez être redirigé automatiquement';
+        $time = $redirectError;
+        $url = 'catalogue';
+      }
+    } else {
+      $error = true;
+      $message = 'Vous n\'êtes pas connecté, vous allez être redirigé automatiquement';
+      $time = $redirectError;
+      $url = 'index';
+    }
     break;
   default :
     $pageName = "Erreur POST";
     $error = true;
     $message = 'Un problème inconnu est survenu, vous allez être redirigé vers l\'accueil';
-    $time = 5;
+    $time = $redirectError;
     $url = 'index';
   }
 } else {
     $pageName = "Nothing";
     $error = true;
     $message = 'Il n\'y a rien à traiter, vous allez être redirigé vers l\'accueil';
-    $time = 5;
+    $time = $redirectError;
     $url = 'index';
 }
 
