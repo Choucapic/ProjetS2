@@ -26,10 +26,6 @@ SQL
     setlocale(LC_ALL, 'fra', 'fr_FR.UTF-8');
     $dateAjout = strftime("%d %B %Y", strtotime($infos['datAjout']));
 
-    // Pour avoir le bon format de la date de naissance de la base de données
-  //  $datns = date("d/m/Y", strtotime($infos['datns']));
-  //  var_dump($datns);
-
     // Pour savoir quel grade sélectionner dans le select
     $selectedAdmin = $infos['grade'] == 'Administrateur' ? 'selected' : '';
     $selectedMembre = $infos['grade'] == 'Membre' ? 'selected' : '';

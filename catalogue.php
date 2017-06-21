@@ -11,6 +11,7 @@ $p = new WebPage('Catalogue');
 $stmt = myPDO::getInstance()->prepare(<<<SQL
         SELECT idT, nomT
         FROM type
+        ORDER BY nomT
 SQL
 );
 $stmt->execute();
@@ -52,6 +53,7 @@ SQL
     $stmt = myPDO::getInstance()->prepare(<<<SQL
             SELECT idM, nomM
             FROM marque
+            ORDER BY nomM
 SQL
 );
     $stmt->execute();
