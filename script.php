@@ -89,7 +89,7 @@ SQL
 SQL
 ) ;
           $stmt->execute();
-          
+
           $error = false;
           $message = 'Le matériel a bien été supprimé, vous allez être redirigé automatiquement';
           $time = $redirectGood;
@@ -365,6 +365,14 @@ SQL
           if (isset($_POST['ref']) && isset($_POST['prix']) && isset($_POST['marque']) && isset($_POST['typeM']) && isset($_POST['carac']) && isset($_POST['valeurCarac'])) {
             if ($_POST['ref'] != '' && $_POST['prix'] != '' && $_POST['marque'] != '' && $_POST['typeM'] != '') {
               $pdo = myPDO::getInstance();
+
+              $stmt = $pdo->prepare(<<<SQL
+                                    SELECT * FROM materiel WHERE ref = '{$_POST['ref']}';
+SQL
+) ;
+              $stmt->execute();
+              if (($result = $stmt->fetch()) === false) {
+
               $stmt = $pdo->prepare(<<<SQL
                                     INSERT INTO `materiel` VALUES ('{$_POST['ref']}', {$_POST['prix']}, '{$_POST['marque']}', '{$_POST['typeM']}', {$_SESSION['idP']});
 SQL
@@ -387,6 +395,12 @@ SQL
               $url = 'ajout';
             } else {
               $error = true;
+              $message = 'La référence existe déjà dans la base de données';
+              $time = $redirectError;
+              $url = 'ajout';
+            }
+            } else {
+              $error = true;
               $message = 'Problème de paramètres, vous allez être redirigé automatiquement';
               $time = $redirectError;
               $url = 'ajout';
@@ -402,9 +416,10 @@ SQL
         case 'marque' :
         case 'caracteristique' :
         if (isset($_POST['nom']) && $_POST['nom'] != '') {
+          $nomCol = (($_POST['table'] == 'type') ? 'nomT' : (($_POST['table'] == 'marque') ? 'nomM' : 'nomC'));
           $pdo = myPDO::getInstance();
           $stmt = $pdo->prepare(<<<SQL
-                                INSERT INTO `{$_POST['table']}` (`nom`) VALUES ('{$_POST['nom']}');
+                                INSERT INTO `{$_POST['table']}` (`{$nomCol}`) VALUES ('{$_POST['nom']}');
 SQL
 ) ;
           $stmt->execute();

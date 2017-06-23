@@ -1,5 +1,8 @@
 body {
 	background-color : #e0e0e0;
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
 }
 
 .brand-logo {
@@ -18,4 +21,8 @@ body {
 
 .radioAjout {
 	padding-left: 10px !important;
+}
+
+main {
+		flex: 1 0 auto;
 }

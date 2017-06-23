@@ -196,6 +196,7 @@ HTML
 {$this->head()}
     </head>
     <body>
+    <main>
     <nav>
     <div class="nav-wrapper grey darken-3">
       <a href="index.php" class="brand-logo">IUT'Elec</a>
@@ -214,6 +215,15 @@ HTML
   </nav>
 
 {$this->body()}
+
+</main>
+<footer class="page-footer grey darken-2">
+          <div class="footer-copyright grey darken-3">
+            <div class="container center">
+            Projet S2 réalisé par : Nodari Tony, Stocq Simon, Hollard Lilian, Zhang Philippe, Girardin Maxence et Lanier Thibault
+            </div>
+          </div>
+        </footer>
     </body>
 </html>
 HTML;
