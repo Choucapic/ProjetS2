@@ -14,8 +14,8 @@ HTML
 ;
 } else {
   $accueil = <<<HTML
-  <p class="center"> Veuillez vous connecter pour consulter le catalogue et gérer les stocks </p>
-
+  <p class="center"> Vous pouvez consulter le Catalogue par le menu ou vous connecter pour gérer les stocks </p>
+  <br>
   <form id="connect" method="post" name="authentification" action="script.php" class="col s12">
   <div class="row">
     <div class="input-field col m6 s12">
@@ -47,13 +47,6 @@ $p->appendContent(<<<HTML
 
     {$accueil}
 
-    <div class="carousel">
-    <a class="carousel-item" href="#one!"><img src="http://lorempixel.com/250/250/nature/1"></a>
-    <a class="carousel-item" href="#two!"><img src="http://lorempixel.com/250/250/nature/2"></a>
-    <a class="carousel-item" href="#three!"><img src="http://lorempixel.com/250/250/nature/3"></a>
-    <a class="carousel-item" href="#four!"><img src="http://lorempixel.com/250/250/nature/4"></a>
-    <a class="carousel-item" href="#five!"><img src="http://lorempixel.com/250/250/nature/5"></a>
-  </div>
   </div>
 HTML
 );
